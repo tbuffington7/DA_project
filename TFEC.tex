@@ -56,7 +56,32 @@ December 13th, 2019}
 
 \section{Modeling methodology}
 \subsection{Data processing}
+The starting point for the modeling effort described in this report is a large dataframe of incident data containing information on over 82,000 unit dispatches that occurred between May of 2015 and November of 2019. Each row of this dataframe is a dispatch of either an ALS or a suppression unit. The columns of the dataframe correspond to the unit id, the unit type, the time the unit was dispatched, the time the unit was cleared from the incident, where the incident occurred, and the station that houses the unit. Based on the location of the incident, each row also contains a \textit{first due} station entry. This entry is based on the fact that the department's jurisdictional region is divided into six smaller non-overlapping regions (one for each station) that each comprise the set of locations that are assigned to a station. Loosely speaking, the first due assignments are based on distance, meaning that for example, Station A's first due area is the set of locations that are closer to Station A than any other station. However, other factors affect these assignments and the boundaries of the first due areas are considered a ``take as given" for the purposes of this project.
+
+
+The first step was to split the dataframe into two separate dataframes- one containing only ALS units and one containing only fire suppression units. Then each dataframe was grouped by the first due station corresponding to the location of the incident. For each station and each unit type, two response time arrays were generated- one corresponding to units that belong to the first due station, and one corresponding to units that came from other stations. These 
+
+
+
+The author then built an algorithm that iterated through each dataframe and determined the units of the same type that were active at the moment each unit was dispatched; active means that a unit is between its dispatched timestamp and its cleared timestamp.
+As a simple example, one can imagine three hypothetical unit dispatches- Unit A, which is dispatched at 12:00 PM and cleared at 1:00 PM, Unit B, which is dispatched at 12:30 PM and cleared at 1:30 PM, and Unit C, which is dispatched at 12:45 PM and cleared at 2:00 PM. Assuming these three dispatched comprise the entire dataset, then for Unit A, the algorithm would determine that no units were active at the time Unit A was dispatched. For Unit B, it would identify that Unit A was active at the time of dispatch, and for Unit C, it would identify that both Unit A and Unit B were active at the time of dispatch. 
+
+
+
+
+
+
+
 \subsection{Distribution fitting}
+For this project, several different methods of estimating hypothetical response time distributions were considered. Ideally, these methods should possess three attributes. First of all, they should be accurate, meaning that they produce estimations of the response time distributions that align with reality. Next, they should be modular, meaning that they can be easily recalculated for different modeling inputs. Finally, they should be computationally inexpensive so that an optimization routine can run many iterations in a relatively short amount of time. 
+
+
+\subsection{Optimization}
+
+
+
+
+
 \begin{equation}
 p(x) = A_0 + \sum_{n=1}^{N} A_ncos(nw_0x) + B_nsin(nw_0x)
 \label{eq:fourier_poly}
